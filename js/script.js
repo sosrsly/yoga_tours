@@ -98,7 +98,128 @@ window.addEventListener("DOMContentLoaded", function() {
         }
         
     }
-
     changeTime("timer", deadline);
-});
+    });
+
+
+
+    // modal window
+
+    let more = document.querySelector(".more"),
+        overlay = document.querySelector(".overlay"),
+        closeWindow = document.querySelector(".popup-close"),
+        descriptionButton = document.querySelector(".description-btn");
+
+
+    function openModalWiondow(selectorButton) {
+        overlay.style.display = "block";
+        document.body.style.overflow = "hidden";
+        selectorButton.classList.add("more-splash");
+    }
+
+    function closeModalWiondow() {
+        overlay.style.display = "none";
+        document.body.style.overflow = "";
+        more.classList.remove("more-splash");
+    }
+
+    more.addEventListener("click", function(){
+        openModalWiondow(this);
+    });
+
+    descriptionButton.addEventListener("click", function(){
+        openModalWiondow(this);
+    });
+
+    closeWindow.addEventListener("click", function() {
+        closeModalWiondow();
+    });
+
+    // let age = document.getElementById('age');
+    // function showUser(surname, name) {
+    //     alert(`Пользователь ${surname} ${name}, его возраст ${this.value}`);
+    // }
+    // showUser.bind(age)("dibilich", "dolboebovich");
+
+
+    // Создание нового блока
+    // class Options {
+    //     constructor(height = 10, width = 10, bg = "gray", fontSize = 15, textAlign) {
+    //         this.height = height;
+    //         this.width = width;
+    //         this.bg = bg;
+    //         this.fontSize = fontSize;
+    //         this.textAlign = textAlign; 
+    //     }
+    //     createNewBlock() {
+    //         let newBlock = document.createElement("div");
+            
+    //         newBlock.textContent = "hello";
+    //         document.body.appendChild(newBlock);
+
+    //         newBlock.style.cssText = `
+    //             height: ${this.height}px;
+    //             width: ${this.width}px;
+    //             background-color: ${this.bg};
+    //             font-size: ${this.fontSize}px;
+    //             text-align: ${this.textAlign};
+    //         `;
+    //     }
+    // }
+    // const newBlocked = new Options(100, 500, "gray");
+    // newBlocked.createNewBlock();
+
+    // Form
+    let mainForm = document.querySelector(".main-form"),
+        input = mainForm.getElementsByTagName("input"),
+        statusMessage = document.createElement("div"),
+        message = {
+            loading: "Загрузка...",
+            success: "Успех",
+            failure: "Что-то пошло не так"
+        };
+
+    statusMessage.classList.add("status");
+
+    mainForm.addEventListener("button", function(e) {
+        e.preventDefault();
+        mainForm.appendChild(statusMessage);
+
+        let request = new XMLHttpRequest();
+        request.open("POST", "server.php");
+        request.setRequestHeader('Content-type', 'application/json; charset=utf8-8');
+
+        let formData = new FormData(mainForm);
+
+        let obj = {};
+        formData.forEach(function(value, key) {
+            obj[key] = value;
+        });
+        let json = JSON.stringify(obj);
+        request.send(json);
+
+        request.addEventListener("readystatechange", function() {
+            if (request.readyState < 4) {
+                statusMessage.innerHTML = message.loading;
+            } else if (request.readyState === 4 && request.status == 200) {
+                statusMessage.innerHTML = message.success;
+            } else {
+                statusMessage.innerHTML = message.failure;
+            }
+        });
+
+        for (let i=0; i < input.length; i++) {
+            input[i].value = "";
+        }
+
+        
+
+    });
+    
+
+    
+
+
+   
+
 
