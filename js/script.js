@@ -108,7 +108,7 @@ window.addEventListener("DOMContentLoaded", function() {
     let more = document.querySelector(".more"),
         overlay = document.querySelector(".overlay"),
         closeWindow = document.querySelector(".popup-close"),
-        descriptionButton = document.querySelector(".description-btn");
+        descriptionButton = document.querySelectorAll(".description-btn");
 
 
     function openModalWiondow(selectorButton) {
@@ -126,10 +126,20 @@ window.addEventListener("DOMContentLoaded", function() {
     more.addEventListener("click", function(){
         openModalWiondow(this);
     });
-
-    descriptionButton.addEventListener("click", function(){
+    
+    descriptionButton[0].addEventListener("click", function(){
         openModalWiondow(this);
     });
+    descriptionButton[1].addEventListener("click", function(){
+        openModalWiondow(this);
+    });
+    descriptionButton[2].addEventListener("click", function(){
+        openModalWiondow(this);
+    });
+    descriptionButton[3].addEventListener("click", function(){
+        openModalWiondow(this);
+    });
+
 
     closeWindow.addEventListener("click", function() {
         closeModalWiondow();
@@ -211,10 +221,97 @@ window.addEventListener("DOMContentLoaded", function() {
         for (let i=0; i < input.length; i++) {
             input[i].value = "";
         }
-
-        
-
     });
+
+
+    // slider
+
+    let slider = document.querySelector(".slider"),
+        sliders = slider.querySelectorAll(".slider-item"),
+        next = slider.querySelector(".next"),
+        prev = slider.querySelector(".prev"),
+        dotsWrap = slider.querySelector(".slider-dots"),
+        dots = dotsWrap.querySelectorAll(".dot"),
+        slideIndex = 1;
+
+    showSlider(slideIndex);
+    function showSlider(n) {
+        if (n > sliders.length) {
+            slideIndex = 1;
+        }
+        if (n < 1) {
+            slideIndex = sliders.length;
+        }
+
+        sliders.forEach((item) => item.style.display = "none");
+        dots.forEach((item) => item.classList.remove("dot-active"));
+
+        sliders[slideIndex - 1].style.display = "block";
+        dots[slideIndex - 1].classList.add("dot-active");
+    }
+    
+    function plusSlide(n) {
+        showSlider(slideIndex += n);
+    }
+
+    function currentSlide(n) {
+        showSlider(slideIndex = n);
+    }
+
+    next.addEventListener("click", () => {
+        plusSlide(1);
+    });
+
+    prev.addEventListener("click", () => {
+        plusSlide(-1);
+    });
+
+    dotsWrap.addEventListener("click", (e) => {
+        for (let i = 0; i < dots.length + 1; i++) {
+            if (e.target.classList.contains("dot") && e.target == dots[i-1]) {
+                currentSlide(i);
+            }
+        } 
+    });
+
+    //calculation
+
+    let calculationBlock = document.getElementById("price"),
+        inputHum = calculationBlock.querySelectorAll(".counter-block-input")[0],
+        inputDay = calculationBlock.querySelectorAll(".counter-block-input")[1],
+        totalBlock = document.getElementById("total"),
+        select = document.getElementById("select"),
+        total = 0,
+        daySum = 0,
+        humSum = 0;
+
+    totalBlock.innerHTML = 0;
+
+    inputHum.addEventListener("change", function() {
+        humSum = +this.value;
+        total = humSum * daySum * 4000;
+        if(humSum == "" || daySum == "") {
+            totalBlock.value = 0;
+        }
+        totalBlock.textContent = total;
+        
+    });
+
+    inputDay.addEventListener("change", function() {
+        daySum = +this.value;
+        total = humSum * daySum * 4000;
+        if(humSum == "" || daySum == "") {
+            totalBlock.value = 0;
+        }
+        totalBlock.textContent = total;
+    });
+
+    select.addEventListener("change", function() {
+        let fakeTotal = total;
+        totalBlock.textContent = fakeTotal * +this.options[this.selectedIndex].value;
+    });
+    
+
     
 
     
